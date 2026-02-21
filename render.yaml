@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: nexus-hub
+    env: docker
+    plan: free
+    region: oregon # Render's free tier region
+    dockerCommand: node server.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false # Set this in Render dashboard
+      - key: ADMIN_TOKEN
+        value: nexus-master-key # Change in dashboard
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /data

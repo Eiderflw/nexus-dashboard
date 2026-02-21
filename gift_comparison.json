@@ -1,0 +1,650 @@
+{
+  "maaOnly": [
+    {
+      "id": 49556,
+      "name": "Ramadan Lion"
+    },
+    {
+      "id": 8568,
+      "name": "Bran Castle"
+    },
+    {
+      "id": 8970,
+      "name": "Pyramids"
+    },
+    {
+      "id": 10038,
+      "name": "Sweetopia"
+    },
+    {
+      "id": 18189,
+      "name": "Time for Family"
+    },
+    {
+      "id": 51277,
+      "name": "Infinity Hall"
+    },
+    {
+      "id": 14200,
+      "name": "Carnival Wagon"
+    },
+    {
+      "id": 10619,
+      "name": "Gimme The Mic"
+    },
+    {
+      "id": 10649,
+      "name": "Convertible"
+    },
+    {
+      "id": 49528,
+      "name": "Crescent Sighting"
+    },
+    {
+      "id": 49533,
+      "name": "Süper Davulu"
+    },
+    {
+      "id": 51279,
+      "name": "Star Odyssey"
+    },
+    {
+      "id": 6942,
+      "name": "Unicorn Fantasy"
+    },
+    {
+      "id": 10588,
+      "name": "Diamond Gun"
+    },
+    {
+      "id": 13407,
+      "name": "Gamer's EVE"
+    },
+    {
+      "id": 13997,
+      "name": "Cupid"
+    },
+    {
+      "id": 9154,
+      "name": "Baby Dragon"
+    },
+    {
+      "id": 13165,
+      "name": "Crystal Crown"
+    },
+    {
+      "id": 14907,
+      "name": "Cooper Picnic"
+    },
+    {
+      "id": 49548,
+      "name": "Ramadan Blessing Box"
+    },
+    {
+      "id": 11109,
+      "name": "EWC Trophy"
+    },
+    {
+      "id": 15649,
+      "name": "Galaxy Globe"
+    },
+    {
+      "id": 17308,
+      "name": "Viking Hammer"
+    },
+    {
+      "id": 8042,
+      "name": "Travel in the US"
+    },
+    {
+      "id": 16080,
+      "name": "Starlight Sceptre"
+    },
+    {
+      "id": 16344,
+      "name": "Diamond"
+    },
+    {
+      "id": 16857,
+      "name": "Golden Stars"
+    },
+    {
+      "id": 6911,
+      "name": "Pumpkin Carriage"
+    },
+    {
+      "id": 5587,
+      "name": "Gold Mine"
+    },
+    {
+      "id": 8606,
+      "name": "Dinosaur"
+    },
+    {
+      "id": 8972,
+      "name": "Glowing Jellyfish"
+    },
+    {
+      "id": 15910,
+      "name": "Super LIVE Star"
+    },
+    {
+      "id": 18870,
+      "name": "Star Rider"
+    },
+    {
+      "id": 19458,
+      "name": "Love Trunk"
+    },
+    {
+      "id": 49547,
+      "name": "Crescent Lanterns"
+    },
+    {
+      "id": 49558,
+      "name": "Shadow Theatre"
+    },
+    {
+      "id": 6444,
+      "name": "Shining Stars"
+    },
+    {
+      "id": 49550,
+      "name": "Ramadan Mubarak"
+    },
+    {
+      "id": 11521,
+      "name": "Manifesting"
+    },
+    {
+      "id": 13167,
+      "name": "Star Map Polaris"
+    },
+    {
+      "id": 14906,
+      "name": "Bouquet"
+    },
+    {
+      "id": 15287,
+      "name": "Cuddle with Me"
+    },
+    {
+      "id": 16233,
+      "name": "Let's Be Friends"
+    },
+    {
+      "id": 16573,
+      "name": "Prince"
+    },
+    {
+      "id": 24797,
+      "name": "Snake Manifesting"
+    },
+    {
+      "id": 51274,
+      "name": "Star Map Polaris"
+    },
+    {
+      "id": 15156,
+      "name": "Sakura Corgi"
+    },
+    {
+      "id": 16345,
+      "name": "Taraxacum Corgi"
+    },
+    {
+      "id": 48919,
+      "name": "Bear with Rose"
+    },
+    {
+      "id": 15803,
+      "name": "Pharaoh Mask"
+    },
+    {
+      "id": 17309,
+      "name": "Air Dancer"
+    },
+    {
+      "id": 6531,
+      "name": "Llama Greetings"
+    },
+    {
+      "id": 7215,
+      "name": "Trick or Treat"
+    },
+    {
+      "id": 9971,
+      "name": "Lover’s Glasses"
+    },
+    {
+      "id": 13406,
+      "name": "Gamer 2025"
+    },
+    {
+      "id": 14908,
+      "name": "Rising Key"
+    },
+    {
+      "id": 15158,
+      "name": "Legend Crown"
+    },
+    {
+      "id": 15424,
+      "name": "LIVE Ranking Crown"
+    },
+    {
+      "id": 15648,
+      "name": "Journal"
+    },
+    {
+      "id": 49532,
+      "name": "Ramazan Hilali"
+    },
+    {
+      "id": 15909,
+      "name": "Rose Bear"
+    },
+    {
+      "id": 12333,
+      "name": "Gold Medal"
+    },
+    {
+      "id": 13737,
+      "name": "I Love TikTok LIVE"
+    },
+    {
+      "id": 5937,
+      "name": "Hanging Lights"
+    },
+    {
+      "id": 7204,
+      "name": "Panther Paws"
+    },
+    {
+      "id": 8004,
+      "name": "Gamer Cat"
+    },
+    {
+      "id": 11897,
+      "name": "Meerkat"
+    },
+    {
+      "id": 12625,
+      "name": "Potato in Paris"
+    },
+    {
+      "id": 13166,
+      "name": "Night Star"
+    },
+    {
+      "id": 13438,
+      "name": "Wooly Hat"
+    },
+    {
+      "id": 14084,
+      "name": "Blow Bubbles"
+    },
+    {
+      "id": 16079,
+      "name": "Bowtiful Crown "
+    },
+    {
+      "id": 16572,
+      "name": "Sour Buddy"
+    },
+    {
+      "id": 17068,
+      "name": "Melon Juice"
+    },
+    {
+      "id": 5924,
+      "name": "Hand Heart"
+    },
+    {
+      "id": 13952,
+      "name": "Mini star"
+    },
+    {
+      "id": 5785,
+      "name": "Cupid’s Bow"
+    },
+    {
+      "id": 10802,
+      "name": "Heart Me Flex"
+    },
+    {
+      "id": 49546,
+      "name": "Crescent Chain"
+    },
+    {
+      "id": 7037,
+      "name": "October"
+    },
+    {
+      "id": 10612,
+      "name": "Let 'Em Cook"
+    },
+    {
+      "id": 47648,
+      "name": "Bouquet"
+    },
+    {
+      "id": 5853,
+      "name": "Gold Boxing Gloves\n"
+    },
+    {
+      "id": 8692,
+      "name": "Hi Bear"
+    },
+    {
+      "id": 11108,
+      "name": "EWC"
+    },
+    {
+      "id": 12236,
+      "name": "Dolphin"
+    },
+    {
+      "id": 6652,
+      "name": "Lightning Bolt "
+    },
+    {
+      "id": 6928,
+      "name": "It’s corn"
+    },
+    {
+      "id": 7086,
+      "name": "Chili"
+    },
+    {
+      "id": 9967,
+      "name": "Heart Puff"
+    },
+    {
+      "id": 10482,
+      "name": "LIVE"
+    },
+    {
+      "id": 13879,
+      "name": "GOAT"
+    },
+    {
+      "id": 19086,
+      "name": "Star"
+    },
+    {
+      "id": 49527,
+      "name": "Ramadan Kareem"
+    },
+    {
+      "id": 49531,
+      "name": "Hoşgeldin Ramazan"
+    },
+    {
+      "id": 49541,
+      "name": "Ramadan Kareem"
+    }
+  ],
+  "alejaOnly": [
+    {
+      "id": 6788,
+      "name": "Glow Stick"
+    },
+    {
+      "id": 10168,
+      "name": "Gorilla"
+    },
+    {
+      "id": 5478,
+      "name": "Castle Fantasy"
+    },
+    {
+      "id": 48898,
+      "name": "Prism Peak"
+    },
+    {
+      "id": 14494,
+      "name": "Interstellar Trek"
+    },
+    {
+      "id": 6271,
+      "name": "Falcon"
+    },
+    {
+      "id": 6790,
+      "name": "Celebration Time"
+    },
+    {
+      "id": 5338,
+      "name": "Unicorn Fantasy"
+    },
+    {
+      "id": 6802,
+      "name": "Ellie the Elephant"
+    },
+    {
+      "id": 11527,
+      "name": "Diamond Gun"
+    },
+    {
+      "id": 14487,
+      "name": "Beach Day"
+    },
+    {
+      "id": 48899,
+      "name": "Frozen Throne"
+    },
+    {
+      "id": 14088,
+      "name": "Pink Dream"
+    },
+    {
+      "id": 14497,
+      "name": "Time Warp"
+    },
+    {
+      "id": 18334,
+      "name": "Puyo Shuffle!"
+    },
+    {
+      "id": 7697,
+      "name": "LOVE U"
+    },
+    {
+      "id": 12504,
+      "name": "The Van Cat"
+    },
+    {
+      "id": 11900,
+      "name": "Couch Potato"
+    },
+    {
+      "id": 12336,
+      "name": "Manifesting"
+    },
+    {
+      "id": 12947,
+      "name": "Lion’s Mane"
+    },
+    {
+      "id": 13454,
+      "name": "Star Map Polaris"
+    },
+    {
+      "id": 14909,
+      "name": "XXXL Flowers"
+    },
+    {
+      "id": 16591,
+      "name": "Prince"
+    },
+    {
+      "id": 17491,
+      "name": "Roses"
+    },
+    {
+      "id": 15159,
+      "name": "Panda Hug"
+    },
+    {
+      "id": 16449,
+      "name": "Terminator Face"
+    },
+    {
+      "id": 15652,
+      "name": "Otter Kiss"
+    },
+    {
+      "id": 16450,
+      "name": "You Are Loved"
+    },
+    {
+      "id": 17179,
+      "name": "Air Dancer"
+    },
+    {
+      "id": 12335,
+      "name": "Elephant trunk"
+    },
+    {
+      "id": 12946,
+      "name": "TikTok Crown"
+    },
+    {
+      "id": 15425,
+      "name": "LIVE Ranking Crown"
+    },
+    {
+      "id": 17565,
+      "name": "Pawfect"
+    },
+    {
+      "id": 18335,
+      "name": "Judy Pose"
+    },
+    {
+      "id": 48901,
+      "name": "Hand with lightning"
+    },
+    {
+      "id": 15911,
+      "name": "Rose Bear"
+    },
+    {
+      "id": 8240,
+      "name": "Tulip Box"
+    },
+    {
+      "id": 12505,
+      "name": "Gold Medal"
+    },
+    {
+      "id": 14087,
+      "name": "Balloons"
+    },
+    {
+      "id": 5794,
+      "name": "Coconut"
+    },
+    {
+      "id": 11526,
+      "name": "Eye See You"
+    },
+    {
+      "id": 11901,
+      "name": "Dancing Hands"
+    },
+    {
+      "id": 13197,
+      "name": "Night Star"
+    },
+    {
+      "id": 13453,
+      "name": "Twinkling Star"
+    },
+    {
+      "id": 14910,
+      "name": "Sparklers"
+    },
+    {
+      "id": 15160,
+      "name": "Hampers"
+    },
+    {
+      "id": 16348,
+      "name": "Bowtiful Crown "
+    },
+    {
+      "id": 16711,
+      "name": "Panda Climb"
+    },
+    {
+      "id": 17069,
+      "name": "Sour Buddy"
+    },
+    {
+      "id": 17400,
+      "name": "Melon Juice"
+    },
+    {
+      "id": 17677,
+      "name": "Juicy Smile"
+    },
+    {
+      "id": 16590,
+      "name": "Potato Transformation"
+    },
+    {
+      "id": 18187,
+      "name": "Song of Harvest "
+    },
+    {
+      "id": 5582,
+      "name": "Mishka Bear"
+    },
+    {
+      "id": 14488,
+      "name": "Capybara"
+    },
+    {
+      "id": 15095,
+      "name": "Woodland Wonder"
+    },
+    {
+      "id": 5576,
+      "name": "Heart"
+    },
+    {
+      "id": 15099,
+      "name": "Balloons"
+    },
+    {
+      "id": 16712,
+      "name": "Furious Fire"
+    },
+    {
+      "id": 48902,
+      "name": "Unicorn horn"
+    },
+    {
+      "id": 15100,
+      "name": "Wave Firework"
+    },
+    {
+      "id": 7032,
+      "name": "Maracas"
+    },
+    {
+      "id": 7096,
+      "name": "It’s corn"
+    },
+    {
+      "id": 8239,
+      "name": "White Rose"
+    },
+    {
+      "id": 15104,
+      "name": "Guardian Wings"
+    }
+  ]
+}

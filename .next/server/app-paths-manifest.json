@@ -1,0 +1,18 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/licenses/page": "app/admin/licenses/page.js",
+  "/api/contacts/route": "app/api/contacts/route.js",
+  "/api/history/route": "app/api/history/route.js",
+  "/api/license/admin/route": "app/api/license/admin/route.js",
+  "/api/license/validate/route": "app/api/license/validate/route.js",
+  "/api/scrape-photos/route": "app/api/scrape-photos/route.js",
+  "/api/scraper/check-agency/route": "app/api/scraper/check-agency/route.js",
+  "/api/scraper/get-region/route": "app/api/scraper/get-region/route.js",
+  "/api/scraper/manager/route": "app/api/scraper/manager/route.js",
+  "/api/scraper/search-lives/route": "app/api/scraper/search-lives/route.js",
+  "/api/tiktok/proxy/route": "app/api/tiktok/proxy/route.js",
+  "/history/page": "app/history/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js"
+}

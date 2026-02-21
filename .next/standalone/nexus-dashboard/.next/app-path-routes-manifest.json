@@ -1,0 +1,18 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/admin/licenses/page": "/admin/licenses",
+  "/api/contacts/route": "/api/contacts",
+  "/api/history/route": "/api/history",
+  "/api/license/admin/route": "/api/license/admin",
+  "/api/license/validate/route": "/api/license/validate",
+  "/api/scrape-photos/route": "/api/scrape-photos",
+  "/api/scraper/check-agency/route": "/api/scraper/check-agency",
+  "/api/scraper/get-region/route": "/api/scraper/get-region",
+  "/api/scraper/manager/route": "/api/scraper/manager",
+  "/api/scraper/search-lives/route": "/api/scraper/search-lives",
+  "/api/tiktok/proxy/route": "/api/tiktok/proxy",
+  "/history/page": "/history",
+  "/login/page": "/login",
+  "/page": "/"
+}

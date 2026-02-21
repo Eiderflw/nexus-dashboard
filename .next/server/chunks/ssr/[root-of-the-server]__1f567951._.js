@@ -1,0 +1,3 @@
+module.exports=[64433,a=>{a.v({className:"inter_5972bc34-module__OU16Qa__className"})},57573,a=>{"use strict";var b=a.i(25050),c=a.i(64433);let d={className:c.default.className,style:{fontFamily:"'Inter', 'Inter Fallback'",fontStyle:"normal"}};function e({children:a}){return(0,b.jsx)("html",{lang:"en",className:"dark",suppressHydrationWarning:!0,children:(0,b.jsx)("body",{className:`${d.className} bg-slate-950 text-slate-100 min-h-screen antialiased`,children:a})})}null!=c.default.variable&&(d.variable=c.default.variable),a.s(["default",()=>e,"metadata",0,{title:"Nexus Live Dashboard",description:"Pro Performance Tracking for Nexus Agency"}],57573)}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__1f567951._.js.map

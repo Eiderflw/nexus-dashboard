@@ -1,0 +1,19 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+
+# Data and Session folders (Prevents Tailwind v4 scanning junk)
+tiktok-session-data/
+tiktok-session-data-search/
+user_data/
+debug_*.json
+debug_*.txt
+debug_*.html
+*.log
+log.json
+log2.json
+dev_log.txt
+build_anim_error.txt
+build_errors.txt

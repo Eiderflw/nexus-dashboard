@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+tiktok-session-data
+*.db
+*.local
+.env
+README.md
+Dockerfile
+fly.toml
