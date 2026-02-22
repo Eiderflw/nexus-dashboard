@@ -12,7 +12,10 @@ export async function POST(req: NextRequest) {
 
         // 1. Validate License & HWID
         const licenses = await getLicenses();
-        const licIndex = licenses.findIndex(l => l.key.trim().toUpperCase() === key.trim().toUpperCase());
+        const licIndex = licenses.findIndex(l => {
+            if (!l.key) return false;
+            return l.key.trim().toUpperCase() === key.trim().toUpperCase();
+        });
 
         if (licIndex === -1) {
             return NextResponse.json({ error: 'Licencia no encontrada' }, { status: 403 });

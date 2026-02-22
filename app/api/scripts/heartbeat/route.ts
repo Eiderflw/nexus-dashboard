@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
         }
 
         const licenses = await getLicenses();
-        const licIndex = licenses.findIndex(l => l.key.trim().toUpperCase() === key.trim().toUpperCase());
+        const licIndex = licenses.findIndex(l => {
+            if (!l.key) return false;
+            return l.key.trim().toUpperCase() === key.trim().toUpperCase();
+        });
 
         if (licIndex === -1) {
             return NextResponse.json({ kill: true, reason: 'Licencia no encontrada' });

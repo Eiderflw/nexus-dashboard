@@ -36,10 +36,18 @@ export const getLicenses = async (): Promise<License[]> => {
     if (pool) {
         try {
             const res = await pool.query('SELECT * FROM licenses');
-            return res.rows;
+            return res.rows.map(r => ({
+                key: r.key || '',
+                expires_at: r.expires_at || '',
+                active: r.active !== false,
+                reason: r.reason || '',
+                note: r.note || '',
+                last_seen: r.last_seen || '',
+                hwid: r.hwid || '',
+                killed: r.killed || false
+            }));
         } catch (e) {
             console.error('Error fetching from PG:', e);
-            // Fallback to empty or throw error? For now, empty list.
             return [];
         }
     }
@@ -60,14 +68,30 @@ export const getLicenses = async (): Promise<License[]> => {
 export const saveLicenses = async (licenses: License[]) => {
     if (pool) {
         try {
-            // Very simple sync for now: Clear and re-insert all
-            // In a real app we'd do incremental updates, but this matches the JSON logic
             await pool.query('BEGIN');
-            await pool.query('DELETE FROM licenses');
+
+            // Delete licenses that are no longer in the array
+            if (licenses.length > 0) {
+                const keys = licenses.map(l => l.key);
+                await pool.query('DELETE FROM licenses WHERE key != ALL($1)', [keys]);
+            } else {
+                await pool.query('DELETE FROM licenses');
+            }
+
             for (const lic of licenses) {
+                if (!lic.key) continue;
                 await pool.query(
-                    'INSERT INTO licenses (key, expires_at, active, reason, note, last_seen, hwid) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-                    [lic.key, lic.expires_at, lic.active, lic.reason || '', lic.note || '', lic.last_seen || '', lic.hwid || '']
+                    `INSERT INTO licenses (key, expires_at, active, reason, note, last_seen, hwid, killed) 
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                     ON CONFLICT (key) DO UPDATE SET 
+                        expires_at = EXCLUDED.expires_at,
+                        active = EXCLUDED.active,
+                        reason = EXCLUDED.reason,
+                        note = EXCLUDED.note,
+                        last_seen = EXCLUDED.last_seen,
+                        hwid = EXCLUDED.hwid,
+                        killed = EXCLUDED.killed`,
+                    [lic.key, lic.expires_at || '', lic.active !== false, lic.reason || '', lic.note || '', lic.last_seen || '', lic.hwid || '', lic.killed || false]
                 );
             }
             await pool.query('COMMIT');
