@@ -14,6 +14,17 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Faltan parámetros' }, { status: 400 });
         }
 
+        // Diagnostic logging
+        console.log('CWD:', process.cwd());
+        try {
+            console.log('Root Files:', fs.readdirSync(process.cwd()));
+            if (fs.existsSync(path.join(process.cwd(), 'scripts'))) {
+                console.log('Scripts Folder Content:', fs.readdirSync(path.join(process.cwd(), 'scripts')));
+            }
+        } catch (e) {
+            console.error('Debug logs failed', e);
+        }
+
         // 1. Validate License & HWID
         const licenses = await getLicenses();
         const license = licenses.find(l => l.key.trim().toUpperCase() === key.trim().toUpperCase());
