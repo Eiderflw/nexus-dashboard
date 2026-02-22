@@ -303,7 +303,7 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="relative w-full max-w-[1600px] h-full max-h-[95vh] bg-slate-900 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-[0_0_80px_rgba(16,185,129,0.15)] border border-slate-800"
+                className="relative w-full max-w-[1800px] h-full max-h-[95vh] bg-slate-900 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-[0_0_80px_rgba(16,185,129,0.15)] border border-slate-800"
             >
                 {/* Close Button Mobile/Desktop */}
                 <div className="absolute top-4 right-4 z-[50] flex items-center gap-4">
@@ -675,19 +675,19 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
                                                                             <span className="inline-flex items-center gap-1 text-red-400 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
                                                                                 <AlertTriangle className="w-3 h-3" /> Región no admitida
                                                                             </span>
-                                                                        ) : res.status === 'En otra agencia' || res.status === 'agency' || (res.status === 'No disponible' && res.details?.toLowerCase().includes('agencia')) ? (
+                                                                        ) : res.status === 'En otra agencia' || (res.details?.toLowerCase().includes('agencia') || res.details?.toLowerCase().includes('signed')) ? (
                                                                             <div className="flex flex-col gap-1 items-start">
                                                                                 <span className="inline-flex items-center gap-1 text-red-400 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
                                                                                     <AlertTriangle className="w-3 h-3" /> No disponible
                                                                                 </span>
-                                                                                <span className="text-[10px] text-red-500/80 ml-1">En otra agencia</span>
+                                                                                <span className="text-[10px] text-red-500/80 ml-1 font-bold">En otra agencia</span>
                                                                             </div>
-                                                                        ) : res.status === 'Otro motivo' ? (
+                                                                        ) : res.status === 'Otro motivo' || (res.status === 'No disponible' && res.details?.toLowerCase().includes('motivo')) ? (
                                                                             <div className="flex flex-col gap-1 items-start">
                                                                                 <span className="inline-flex items-center gap-1 text-red-400 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
                                                                                     <AlertTriangle className="w-3 h-3" /> No disponible
                                                                                 </span>
-                                                                                <span className="text-[10px] text-red-500/80 ml-1">Otro motivo</span>
+                                                                                <span className="text-[10px] text-red-500/80 ml-1 font-bold">Otro motivo</span>
                                                                             </div>
                                                                         ) : (
                                                                             <div className="flex flex-col gap-1 items-start">
@@ -695,7 +695,10 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
                                                                                     <AlertTriangle className="w-3 h-3" /> No disponible
                                                                                 </span>
                                                                                 {res.status !== 'No disponible' && (
-                                                                                    <span className="text-[10px] text-red-500/80 ml-1">{res.status}</span>
+                                                                                    <span className="text-[10px] text-red-500/80 ml-1 font-bold">{res.status}</span>
+                                                                                )}
+                                                                                {res.status === 'No disponible' && res.details && !res.details.toLowerCase().includes('no disponible') && (
+                                                                                    <span className="text-[10px] text-red-500/80 ml-1 font-bold italic truncate max-w-[150px]" title={res.details}>{res.details}</span>
                                                                                 )}
                                                                             </div>
                                                                         )}

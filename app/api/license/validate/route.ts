@@ -3,7 +3,7 @@ import { getLicenses, saveLicenses, initDb } from '@/lib/license-db';
 
 export async function POST(req: NextRequest) {
     try {
-        const { key } = await req.json();
+        const { key, hwid } = await req.json();
         await initDb();
 
         if (!key) {
@@ -35,10 +35,25 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // Update last_seen
+        // HWID Enforcement
+        if (!license.hwid) {
+            // First time use: Bind current HWID
+            if (!hwid) {
+                return NextResponse.json({ valid: false, message: 'HWID requerido para activación' });
+            }
+            license.hwid = hwid;
+        } else if (license.hwid !== hwid) {
+            // HWID Mismatch
+            return NextResponse.json({
+                valid: false,
+                message: 'Esta licencia ya está vinculada a otro dispositivo. Contacta al administrador para resetear el HWID.'
+            });
+        }
+
+        // Update last_seen and potentially HWID
         const updatedLicenses = licenses.map(l =>
             l.key.trim().toUpperCase() === searchKey
-                ? { ...l, last_seen: new Date().toISOString() }
+                ? { ...l, last_seen: new Date().toISOString(), hwid: license.hwid }
                 : l
         );
         await saveLicenses(updatedLicenses);

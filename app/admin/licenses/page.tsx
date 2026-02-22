@@ -10,6 +10,7 @@ interface License {
     reason?: string;
     note?: string;
     last_seen?: string;
+    hwid?: string;
 }
 
 export default function AdminLicensesPage() {
@@ -79,22 +80,46 @@ export default function AdminLicensesPage() {
                         </div>
                     </div>
                     <h1 className="text-2xl font-bold text-center text-white mb-2">Panel de Control</h1>
-                    <p className="text-slate-400 text-center text-sm mb-8">Ingresa tu llave maestra para gestionar licencias</p>
+                    <p className="text-slate-400 text-center text-sm mb-8">Gestión de licencias - Acceso Restringido</p>
 
                     <div className="space-y-4">
-                        <input
-                            type="password"
-                            placeholder="Llave maestra de administrador..."
-                            className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg px-4 py-3 focus:border-blue-500 outline-none"
-                            value={token}
-                            onChange={(e) => setToken(e.target.value)}
-                        />
+                        <div className="space-y-1">
+                            <label className="text-xs font-semibold text-slate-500 ml-1">USUARIO</label>
+                            <input
+                                type="text"
+                                placeholder="Usuario..."
+                                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg px-4 py-3 focus:border-blue-500 outline-none"
+                                value={token.split(':')[0] || ''}
+                                onChange={(e) => setToken(e.target.value + ':' + (token.split(':')[1] || ''))}
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-semibold text-slate-500 ml-1">CONTRASEÑA</label>
+                            <input
+                                type="password"
+                                placeholder="Contraseña..."
+                                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg px-4 py-3 focus:border-blue-500 outline-none"
+                                value={token.split(':')[1] || ''}
+                                onChange={(e) => setToken((token.split(':')[0] || '') + ':' + e.target.value)}
+                            />
+                        </div>
                         <button
-                            onClick={() => fetchLicenses(token)}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-colors"
+                            onClick={() => {
+                                const [u, p] = token.split(':');
+                                if (u === 'nenegro' && p === 'Eider1993.1') {
+                                    fetchLicenses('nexus-master-key');
+                                    setToken('nexus-master-key');
+                                } else {
+                                    alert("Credenciales incorrectas");
+                                }
+                            }}
+                            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-colors mt-2"
                         >
                             Acceder al Sistema
                         </button>
+                        <p className="text-[10px] text-slate-600 text-center mt-4 italic">
+                            Email de recuperación: eiderflw@gmail.com
+                        </p>
                     </div>
                 </div>
             </div>
@@ -200,6 +225,9 @@ export default function AdminLicensesPage() {
                                         <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
                                             <span className="flex items-center gap-1"><User className="w-3 h-3" /> {lic.note || 'Sin nota'}</span>
                                             <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Expiración: {lic.expires_at.replace('T', ' ')}</span>
+                                            <span className={`flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-800 text-[9px] ${lic.hwid ? 'text-blue-400 border border-blue-500/20' : 'text-slate-600 border border-slate-800'}`}>
+                                                HWID: {lic.hwid ? lic.hwid.substring(0, 12) + '...' : 'LIBRE'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -225,6 +253,18 @@ export default function AdminLicensesPage() {
                                         title={lic.active ? 'Suspender (Kill-Switch)' : 'Activar'}
                                     >
                                         <Power className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (confirm("¿Resetear el candado de hardware (HWID)? El usuario podrá usar la llave en otra PC.")) {
+                                                handleAction('update', { ...lic, hwid: '' });
+                                            }
+                                        }}
+                                        className={`p-2 rounded hover:bg-slate-800 transition-colors ${lic.hwid ? 'text-purple-400' : 'text-slate-600 opacity-30'}`}
+                                        title="Resetear HWID (Desvincular PC)"
+                                        disabled={!lic.hwid}
+                                    >
+                                        <Shield className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => {

@@ -210,11 +210,11 @@ const creators = creatorsArg.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).
                     status = 'En otra agencia';
                 } else if (text.match(/Otro motivo|Other reason/i)) {
                     status = 'Otro motivo';
-                } else if (text.match(/Disponible|Available|No firmado|Not signed/i)) {
-                    status = 'Disponible';
                 } else if (text.match(/Invitado|Invited|Solicitado|Requested/i)) {
                     status = 'Invitado';
-                } else if (text.match(/No elegible|Ineligible|No disponible|Not accessible|Not accessible/i)) {
+                } else if (text.match(/Disponible|Available|No firmado|Not signed/i)) {
+                    status = 'Disponible';
+                } else if (text.match(/No elegible|Ineligible|No disponible|Not accessible|Not accessible|Not available/i)) {
                     status = 'No disponible';
                 }
 

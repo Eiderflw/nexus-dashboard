@@ -13,6 +13,7 @@ export interface License {
     reason?: string;
     note?: string;
     last_seen?: string;
+    hwid?: string;
 }
 
 // PostgreSQL Pool (only initialized if DATABASE_URL is present)
@@ -58,8 +59,8 @@ export const saveLicenses = async (licenses: License[]) => {
             await pool.query('DELETE FROM licenses');
             for (const lic of licenses) {
                 await pool.query(
-                    'INSERT INTO licenses (key, expires_at, active, reason, note, last_seen) VALUES ($1, $2, $3, $4, $5, $6)',
-                    [lic.key, lic.expires_at, lic.active, lic.reason || '', lic.note || '', lic.last_seen || '']
+                    'INSERT INTO licenses (key, expires_at, active, reason, note, last_seen, hwid) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+                    [lic.key, lic.expires_at, lic.active, lic.reason || '', lic.note || '', lic.last_seen || '', lic.hwid || '']
                 );
             }
             await pool.query('COMMIT');
@@ -92,7 +93,8 @@ export const initDb = async () => {
                 active BOOLEAN NOT NULL,
                 reason TEXT,
                 note TEXT,
-                last_seen TEXT
+                last_seen TEXT,
+                hwid TEXT
             )
         `);
     }
