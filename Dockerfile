@@ -34,7 +34,6 @@ RUN mkdir -p /data && chown nextjs:nodejs /data
 
 USER nextjs
 
-EXPOSE 3000
-ENV PORT 3000
+# Port is dynamically assigned by Render (default 10000)
 # server.js is created by next build from the standalone output
 CMD ["node", "server.js"]
