@@ -1,0 +1,482 @@
+[
+  {
+    "id": 49556,
+    "name": "Ramadan Lion",
+    "d": 30999
+  },
+  {
+    "id": 8568,
+    "name": "Bran Castle",
+    "d": 15000
+  },
+  {
+    "id": 8970,
+    "name": "Pyramids",
+    "d": 15000
+  },
+  {
+    "id": 10038,
+    "name": "Sweetopia",
+    "d": 15000
+  },
+  {
+    "id": 18189,
+    "name": "Time for Family",
+    "d": 15000
+  },
+  {
+    "id": 51277,
+    "name": "Infinity Hall",
+    "d": 15000
+  },
+  {
+    "id": 14200,
+    "name": "Carnival Wagon",
+    "d": 13999
+  },
+  {
+    "id": 10619,
+    "name": "Gimme The Mic",
+    "d": 12000
+  },
+  {
+    "id": 10649,
+    "name": "Convertible",
+    "d": 12000
+  },
+  {
+    "id": 49528,
+    "name": "Crescent Sighting",
+    "d": 6999
+  },
+  {
+    "id": 49533,
+    "name": "Süper Davulu",
+    "d": 6999
+  },
+  {
+    "id": 51279,
+    "name": "Star Odyssey",
+    "d": 6000
+  },
+  {
+    "id": 6942,
+    "name": "Unicorn Fantasy",
+    "d": 5000
+  },
+  {
+    "id": 10588,
+    "name": "Diamond Gun",
+    "d": 5000
+  },
+  {
+    "id": 13407,
+    "name": "Gamer's EVE",
+    "d": 5000
+  },
+  {
+    "id": 13997,
+    "name": "Cupid",
+    "d": 2888
+  },
+  {
+    "id": 9154,
+    "name": "Baby Dragon",
+    "d": 2000
+  },
+  {
+    "id": 13165,
+    "name": "Crystal Crown",
+    "d": 2000
+  },
+  {
+    "id": 14907,
+    "name": "Cooper Picnic",
+    "d": 2000
+  },
+  {
+    "id": 49548,
+    "name": "Ramadan Blessing Box",
+    "d": 1999
+  },
+  {
+    "id": 11109,
+    "name": "EWC Trophy",
+    "d": 1500
+  },
+  {
+    "id": 15649,
+    "name": "Galaxy Globe",
+    "d": 1500
+  },
+  {
+    "id": 17308,
+    "name": "Viking Hammer",
+    "d": 1500
+  },
+  {
+    "id": 8042,
+    "name": "Travel in the US",
+    "d": 1200
+  },
+  {
+    "id": 16080,
+    "name": "Starlight Sceptre",
+    "d": 1200
+  },
+  {
+    "id": 16344,
+    "name": "Diamond",
+    "d": 1099
+  },
+  {
+    "id": 16857,
+    "name": "Golden Stars",
+    "d": 1099
+  },
+  {
+    "id": 6911,
+    "name": "Pumpkin Carriage",
+    "d": 1031
+  },
+  {
+    "id": 5587,
+    "name": "Gold Mine",
+    "d": 1000
+  },
+  {
+    "id": 8606,
+    "name": "Dinosaur",
+    "d": 1000
+  },
+  {
+    "id": 8972,
+    "name": "Glowing Jellyfish",
+    "d": 1000
+  },
+  {
+    "id": 15910,
+    "name": "Super LIVE Star",
+    "d": 1000
+  },
+  {
+    "id": 18870,
+    "name": "Star Rider",
+    "d": 900
+  },
+  {
+    "id": 19458,
+    "name": "Love Trunk",
+    "d": 899
+  },
+  {
+    "id": 49547,
+    "name": "Crescent Lanterns",
+    "d": 899
+  },
+  {
+    "id": 49558,
+    "name": "Shadow Theatre",
+    "d": 899
+  },
+  {
+    "id": 6444,
+    "name": "Shining Stars",
+    "d": 599
+  },
+  {
+    "id": 49550,
+    "name": "Ramadan Mubarak",
+    "d": 599
+  },
+  {
+    "id": 11521,
+    "name": "Manifesting",
+    "d": 500
+  },
+  {
+    "id": 13167,
+    "name": "Star Map Polaris",
+    "d": 500
+  },
+  {
+    "id": 14906,
+    "name": "Bouquet",
+    "d": 500
+  },
+  {
+    "id": 15287,
+    "name": "Cuddle with Me",
+    "d": 500
+  },
+  {
+    "id": 16233,
+    "name": "Let's Be Friends",
+    "d": 500
+  },
+  {
+    "id": 16573,
+    "name": "Prince",
+    "d": 500
+  },
+  {
+    "id": 24797,
+    "name": "Snake Manifesting",
+    "d": 500
+  },
+  {
+    "id": 51274,
+    "name": "Star Map Polaris",
+    "d": 500
+  },
+  {
+    "id": 15156,
+    "name": "Sakura Corgi",
+    "d": 499
+  },
+  {
+    "id": 16345,
+    "name": "Taraxacum Corgi",
+    "d": 400
+  },
+  {
+    "id": 48919,
+    "name": "Bear with Rose",
+    "d": 400
+  },
+  {
+    "id": 15803,
+    "name": "Pharaoh Mask",
+    "d": 399
+  },
+  {
+    "id": 17309,
+    "name": "Air Dancer",
+    "d": 300
+  },
+  {
+    "id": 6531,
+    "name": "Llama Greetings",
+    "d": 299
+  },
+  {
+    "id": 7215,
+    "name": "Trick or Treat",
+    "d": 299
+  },
+  {
+    "id": 9971,
+    "name": "Lover’s Glasses",
+    "d": 299
+  },
+  {
+    "id": 13406,
+    "name": "Gamer 2025",
+    "d": 299
+  },
+  {
+    "id": 14908,
+    "name": "Rising Key",
+    "d": 299
+  },
+  {
+    "id": 15158,
+    "name": "Legend Crown",
+    "d": 299
+  },
+  {
+    "id": 15424,
+    "name": "LIVE Ranking Crown",
+    "d": 299
+  },
+  {
+    "id": 15648,
+    "name": "Journal",
+    "d": 299
+  },
+  {
+    "id": 49532,
+    "name": "Ramazan Hilali",
+    "d": 299
+  },
+  {
+    "id": 15909,
+    "name": "Rose Bear",
+    "d": 214
+  },
+  {
+    "id": 12333,
+    "name": "Gold Medal",
+    "d": 200
+  },
+  {
+    "id": 13737,
+    "name": "I Love TikTok LIVE",
+    "d": 200
+  },
+  {
+    "id": 5937,
+    "name": "Hanging Lights",
+    "d": 199
+  },
+  {
+    "id": 7204,
+    "name": "Panther Paws",
+    "d": 199
+  },
+  {
+    "id": 8004,
+    "name": "Gamer Cat",
+    "d": 199
+  },
+  {
+    "id": 11897,
+    "name": "Meerkat",
+    "d": 199
+  },
+  {
+    "id": 12625,
+    "name": "Potato in Paris",
+    "d": 199
+  },
+  {
+    "id": 13166,
+    "name": "Night Star",
+    "d": 199
+  },
+  {
+    "id": 13438,
+    "name": "Wooly Hat",
+    "d": 199
+  },
+  {
+    "id": 14084,
+    "name": "Blow Bubbles",
+    "d": 199
+  },
+  {
+    "id": 16079,
+    "name": "Bowtiful Crown ",
+    "d": 199
+  },
+  {
+    "id": 16572,
+    "name": "Sour Buddy",
+    "d": 199
+  },
+  {
+    "id": 17068,
+    "name": "Melon Juice",
+    "d": 199
+  },
+  {
+    "id": 5924,
+    "name": "Hand Heart",
+    "d": 100
+  },
+  {
+    "id": 13952,
+    "name": "Mini star",
+    "d": 100
+  },
+  {
+    "id": 5785,
+    "name": "Cupid’s Bow",
+    "d": 99
+  },
+  {
+    "id": 10802,
+    "name": "Heart Me Flex",
+    "d": 99
+  },
+  {
+    "id": 49546,
+    "name": "Crescent Chain",
+    "d": 99
+  },
+  {
+    "id": 7037,
+    "name": "October",
+    "d": 88
+  },
+  {
+    "id": 10612,
+    "name": "Let 'Em Cook",
+    "d": 20
+  },
+  {
+    "id": 47648,
+    "name": "Bouquet",
+    "d": 20
+  },
+  {
+    "id": 5853,
+    "name": "Gold Boxing Gloves\n",
+    "d": 10
+  },
+  {
+    "id": 8692,
+    "name": "Hi Bear",
+    "d": 10
+  },
+  {
+    "id": 11108,
+    "name": "EWC",
+    "d": 10
+  },
+  {
+    "id": 12236,
+    "name": "Dolphin",
+    "d": 10
+  },
+  {
+    "id": 6652,
+    "name": "Lightning Bolt ",
+    "d": 1
+  },
+  {
+    "id": 6928,
+    "name": "It’s corn",
+    "d": 1
+  },
+  {
+    "id": 7086,
+    "name": "Chili",
+    "d": 1
+  },
+  {
+    "id": 9967,
+    "name": "Heart Puff",
+    "d": 1
+  },
+  {
+    "id": 10482,
+    "name": "LIVE",
+    "d": 1
+  },
+  {
+    "id": 13879,
+    "name": "GOAT",
+    "d": 1
+  },
+  {
+    "id": 19086,
+    "name": "Star",
+    "d": 1
+  },
+  {
+    "id": 49527,
+    "name": "Ramadan Kareem",
+    "d": 1
+  },
+  {
+    "id": 49531,
+    "name": "Hoşgeldin Ramazan",
+    "d": 1
+  },
+  {
+    "id": 49541,
+    "name": "Ramadan Kareem",
+    "d": 1
+  }
+]

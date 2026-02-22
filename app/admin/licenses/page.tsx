@@ -11,6 +11,7 @@ interface License {
     note?: string;
     last_seen?: string;
     hwid?: string;
+    bypass_hwid?: boolean;
 }
 
 type Tab = 'licenses' | 'scripts' | 'settings';
@@ -25,7 +26,8 @@ export default function AdminLicensesPage() {
         key: '',
         expires_at: '',
         active: true,
-        note: ''
+        note: '',
+        bypass_hwid: false
     });
     const [isEditing, setIsEditing] = useState(false);
 
@@ -85,7 +87,7 @@ export default function AdminLicensesPage() {
                 const data = await res.json();
                 setLicenses(data.licenses);
                 if (action === 'add' || action === 'update') {
-                    setNewLicense({ key: '', expires_at: '', active: true, note: '' });
+                    setNewLicense({ key: '', expires_at: '', active: true, note: '', bypass_hwid: false });
                     setIsEditing(false);
                 }
             }
@@ -187,7 +189,7 @@ export default function AdminLicensesPage() {
                         <button
                             onClick={() => {
                                 const [u, p] = token.split(':');
-                                if (u === 'nenegro' && p === 'Eider1993.1') {
+                                if (u === 'nenegro' && p === 'Eider166') {
                                     fetchLicenses('nexus-master-key');
                                     fetchSettings('nexus-master-key');
                                     setToken('nexus-master-key');
@@ -257,7 +259,7 @@ export default function AdminLicensesPage() {
                                     {isEditing ? 'Editar Licencia' : 'Crear Licencia'}
                                 </span>
                                 {isEditing && (
-                                    <button onClick={() => { setIsEditing(false); setNewLicense({ key: '', expires_at: '', active: true, note: '' }); }} className="text-slate-500 hover:text-white transition-colors">
+                                    <button onClick={() => { setIsEditing(false); setNewLicense({ key: '', expires_at: '', active: true, note: '', bypass_hwid: false }); }} className="text-slate-500 hover:text-white transition-colors">
                                         <X className="w-4 h-4" />
                                     </button>
                                 )}
@@ -282,6 +284,20 @@ export default function AdminLicensesPage() {
                                         value={newLicense.expires_at}
                                         onChange={(e) => setNewLicense({ ...newLicense, expires_at: e.target.value })}
                                     />
+                                </div>
+                                <div>
+                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4 rounded border-slate-800 bg-slate-950 text-blue-600 focus:ring-blue-500"
+                                            checked={newLicense.bypass_hwid}
+                                            onChange={(e) => setNewLicense({ ...newLicense, bypass_hwid: e.target.checked })}
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">Multi-Device (Bypass HWID)</span>
+                                            <span className="text-[10px] text-slate-500">Permite usar la llave en Web y App a la vez</span>
+                                        </div>
+                                    </label>
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-slate-500 mb-1">USUARIO / NOTA</label>
@@ -316,6 +332,11 @@ export default function AdminLicensesPage() {
                                                 <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold ${lic.active ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
                                                     {lic.active ? 'Activo' : 'Baneado'}
                                                 </span>
+                                                {lic.bypass_hwid && (
+                                                    <span className="px-2 py-0.5 rounded-full text-[10px] uppercase font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center gap-1">
+                                                        <Shield className="w-2.5 h-2.5" /> MULTI-PC
+                                                    </span>
+                                                )}
                                                 {lic.active && lic.last_seen && mounted && (
                                                     <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] uppercase font-bold ${new Date().getTime() - new Date(lic.last_seen).getTime() < 5 * 60 * 1000 ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-800 text-slate-500'}`}>
                                                         <div className={`w-1.5 h-1.5 rounded-full ${new Date().getTime() - new Date(lic.last_seen).getTime() < 5 * 60 * 1000 ? 'bg-blue-400 animate-pulse' : 'bg-slate-600'}`} />

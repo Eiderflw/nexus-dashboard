@@ -36,7 +36,11 @@ export async function POST(req: NextRequest) {
         }
 
         // HWID Enforcement
-        if (!license.hwid) {
+        if (license.bypass_hwid) {
+            // No strict enforcement for this specific license (e.g. Admin)
+            // But we still track whatever ID they send if any
+            if (hwid) license.hwid = hwid;
+        } else if (!license.hwid) {
             // First time use: Bind current HWID
             if (!hwid) {
                 return NextResponse.json({ valid: false, message: 'HWID requerido para activación' });

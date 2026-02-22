@@ -1,0 +1,35 @@
+Periodo de datos
+ID del creador
+Nombre de usuario del creador
+Grupo
+Agente
+Hora de incorporación
+Días desde la incorporación
+Diamantes
+Duración de LIVE
+Días válidos de emisiones LIVE
+Nuevos seguidores
+Emisiones LIVE
+Diamantes en el último mes
+Duración de emisiones LIVE (en horas) durante el último mes
+Días válidos de emisiones LIVE del mes pasado
+Nuevos seguidores en el último mes
+Emisiones LIVE en el último mes
+Diamantes - Porcentaje logrado
+Duración de LIVE - Porcentaje logrado
+Días válidos de emisiones LIVE - Porcentaje logrado
+Nuevos seguidores - Porcentaje logrado
+Emisiones LIVE - Porcentaje logrado
+Diamantes - frente al mes pasado
+Duración de LIVE - frente al mes pasado
+Días válidos de emisiones LIVE - frente al mes pasado
+Nuevos seguidores - frente al mes pasado
+Emisiones LIVE - frente al mes pasado
+Partidas
+Diamantes de partidas
+Nuevos creadores LIVE
+Diamantes del modo de varios invitados
+Diamantes de varios invitados (como anfitrión)
+Diamantes del modo de varios invitados (como invitado)
+Base de Diamantes antes de unirse
+Estado de graduación

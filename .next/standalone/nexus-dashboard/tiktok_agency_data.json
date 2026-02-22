@@ -1,0 +1,8 @@
+{
+  "BaseResp": {
+    "StatusCode": 5013171,
+    "StatusMessage": "agency TTP permission forbidden"
+  },
+  "_harvested_at": "2026-02-14T03:08:10.911Z",
+  "_source_url": "https://live-backstage.tiktok.com/creators/live/union_platform_api/agency/data_suite_card/data?msToken=bKzDzybisVdB_Fn8xNdyPFMsBzxh3bBdhR9Q2Nb68-5jbZkd8AfR5PKtFKwo_Lh8-CbsmKLdAYOJAHU78w4WMBQY-vgsKoXNTwgnEVM7XPXmQS8E8aG6TeF_Nz9g&X-Bogus=DFSzswVOzVAGfIKzCNuNU-GM4Kou&X-Gnarly=MxW62Tu5RG1YF1S-esHyPsP04BBRtvgztARxKm0dzgd4Wiu3ycdM5gbIbGJm8533A6GwC-dNLt2Zc7HTQ74SBEq9uM2r3zhk97JVUDe7g3rMxw3KvD6di2De6ABILlq-j4BIPkkKHRctuCQg-3ONk9K7gJ1A92UOTmpnYq20dGN9z80Gzw/96ldvNyOcBp6Y1bbaBeEFFhgmVZ8vI46XbLQdE136jAIYU7rlBEZTeYZMP4ZvOaNNzGxf-NFwRZmoAwzvt47JBZ7XK4NUNq-5RldvrnCzOqShj3-2YW29lwTM"
+}

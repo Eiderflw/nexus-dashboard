@@ -47,6 +47,12 @@
       "namedRegex": "^/admin/licenses(?:/)?$"
     },
     {
+      "page": "/api/admin/scripts",
+      "regex": "^/api/admin/scripts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/scripts(?:/)?$"
+    },
+    {
       "page": "/api/contacts",
       "regex": "^/api/contacts(?:/)?$",
       "routeKeys": {},
@@ -99,6 +105,18 @@
       "regex": "^/api/scraper/search\\-lives(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/scraper/search\\-lives(?:/)?$"
+    },
+    {
+      "page": "/api/scripts/heartbeat",
+      "regex": "^/api/scripts/heartbeat(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/scripts/heartbeat(?:/)?$"
+    },
+    {
+      "page": "/api/scripts/sync",
+      "regex": "^/api/scripts/sync(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/scripts/sync(?:/)?$"
     },
     {
       "page": "/api/tiktok/proxy",

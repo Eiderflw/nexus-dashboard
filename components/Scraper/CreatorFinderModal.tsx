@@ -38,6 +38,25 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
     // Cookie Persistence & History
     const [validationHistory, setValidationHistory] = useState<any[]>([]);
 
+    const getFingerprint = async () => {
+        // If Electron, get real HWID
+        if (typeof window !== 'undefined' && (window as any).nexusHunter?.isElectron) {
+            try {
+                const hwid = await (window as any).nexusHunter.execute({ action: 'get-hwid' });
+                return hwid;
+            } catch (e) {
+                console.error("Failed to get HWID from Electron", e);
+            }
+        }
+
+        let fp = localStorage.getItem('nexus_fp');
+        if (!fp) {
+            fp = 'WEB-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('nexus_fp', fp);
+        }
+        return fp;
+    };
+
     useEffect(() => {
         const savedCookie = localStorage.getItem('tiktok_session_cookie');
         if (savedCookie) setCookie(savedCookie);
@@ -63,10 +82,11 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
         try {
             // IMPORTANT: Change this URL to your Fly.io deployment URL later!
             const HUB_URL = process.env.NEXT_PUBLIC_HUB_URL || '';
+            const hwid = await getFingerprint();
             const res = await fetch(`${HUB_URL}/api/license/validate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ key })
+                body: JSON.stringify({ key, hwid })
             });
             const data = await res.json();
             if (data.valid) {
@@ -184,10 +204,26 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
         if (creators.length === 0) return;
 
         setIsValidating(true);
-        setValidationResults([]); // Reset view, but history is kept separately if needed
+        setValidationResults([]);
 
         const BATCH_SIZE = 30;
         const totalBatches = Math.ceil(creators.length / BATCH_SIZE);
+        const isElectron = typeof window !== 'undefined' && (window as any).nexusHunter?.isElectron;
+
+        const runBatchOnServer = async (batch: string[], batchNum: number) => {
+            try {
+                const response = await fetch('/api/scraper/check-agency', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ creators: batch, cookie })
+                });
+                const data = await response.json();
+                if (response.ok) return data.results || [];
+            } catch (error) {
+                console.error('Validation Error for batch ' + batchNum, error);
+            }
+            return [];
+        };
 
         for (let i = 0; i < totalBatches; i++) {
             const batchConfig = creators.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE);
@@ -197,45 +233,38 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
 
             if (licenseStatus !== 'valid') {
                 setLicenseMessage('Debes tener una licencia activa para usar el escáner.');
-                return;
+                break;
             }
 
-            try {
-                const response = await fetch('/api/scraper/check-agency', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ creators: batchConfig, cookie })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    const newResults = data.results || [];
-
-                    // Update UI immediately with new batch and sort
-                    setValidationResults(prev => {
-                        const merged = [...prev, ...newResults];
-                        // Sort: Disponible first, then others
-                        return merged.sort((a, b) => {
-                            const aDisp = a.status === 'Disponible' || a.status === 'available';
-                            const bDisp = b.status === 'Disponible' || b.status === 'available';
-                            if (aDisp && !bDisp) return -1;
-                            if (!aDisp && bDisp) return 1;
-                            return 0; // Keep original order for the rest
-                        });
+            let newResults = [];
+            if (isElectron) {
+                try {
+                    const res = await (window as any).nexusHunter.execute({
+                        action: 'check-agency',
+                        params: { creators: batchConfig, cookie, licenseKey }
                     });
-                    saveHistory(newResults);
-
-                } else {
-                    console.warn("Batch failed", data);
-                    // Continue to next batch? Or stop? 
-                    // Let's continue but warn
+                    newResults = res.results || [];
+                } catch (e) {
+                    console.error("Local Electron Scraper Failed", e);
                 }
-            } catch (error) {
-                console.error('Validation Error for batch ' + batchNum, error);
+            } else {
+                newResults = await runBatchOnServer(batchConfig, batchNum);
             }
 
-            // Small pause between batches to be safe
+            if (newResults.length > 0) {
+                setValidationResults(prev => {
+                    const merged = [...prev, ...newResults];
+                    return merged.sort((a, b) => {
+                        const aDisp = a.status === 'Disponible' || a.status === 'available';
+                        const bDisp = b.status === 'Disponible' || b.status === 'available';
+                        if (aDisp && !bDisp) return -1;
+                        if (!aDisp && bDisp) return 1;
+                        return 0;
+                    });
+                });
+                saveHistory(newResults);
+            }
+
             if (i < totalBatches - 1) {
                 setStatusMessage(`Esperando 5s para el siguiente bloque...`);
                 await new Promise(r => setTimeout(r, 5000));
@@ -252,37 +281,44 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
 
         setIsSearching(true);
         setSearchResults([]);
+        const isElectron = typeof window !== 'undefined' && (window as any).nexusHunter?.isElectron;
 
         try {
-            const response = await fetch('/api/scraper/search-lives', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ keyword: searchQuery, cookie })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                const creators = data.creators || [];
-                setSearchResults(creators); // Now expects objects
-
-                // Auto-fill validation list with found creators (usernames only)
-                if (creators.length > 0) {
-                    const usernames = creators.map((c: any) => c.username).join('\n');
-                    setValidateList(usernames);
-
-                    const usUsernames = creators
-                        .filter((c: any) => c.region === 'US' || c.region === 'ESTADOS UNIDOS')
-                        .map((c: any) => c.username)
-                        .join('\n');
-                    setValidateListUS(usUsernames);
-                }
+            let creators = [];
+            if (isElectron) {
+                const res = await (window as any).nexusHunter.execute({
+                    action: 'search-lives',
+                    params: { keyword: searchQuery, cookie, licenseKey }
+                });
+                creators = res.creators || [];
             } else {
-                alert('Error en la búsqueda: ' + (data.error || 'Desconocido'));
+                const response = await fetch('/api/scraper/search-lives', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keyword: searchQuery, cookie })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    creators = data.creators || [];
+                } else {
+                    alert('Error en la búsqueda: ' + (data.error || 'Desconocido'));
+                }
+            }
+
+            if (creators.length > 0) {
+                setSearchResults(creators);
+                const usernames = creators.map((c: any) => c.username).join('\n');
+                setValidateList(usernames);
+
+                const usUsernames = creators
+                    .filter((c: any) => c.region === 'US' || c.region === 'ESTADOS UNIDOS')
+                    .map((c: any) => c.username)
+                    .join('\n');
+                setValidateListUS(usUsernames);
             }
         } catch (error) {
             console.error('Search Error:', error);
-            alert('Error de conexión con el robot de búsqueda.');
+            alert('Error de conexión con el motor de búsqueda.');
         } finally {
             setIsSearching(false);
         }

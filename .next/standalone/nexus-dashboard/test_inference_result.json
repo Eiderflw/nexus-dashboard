@@ -1,0 +1,17 @@
+{
+  "ownerRegion": "Unknown",
+  "inferredRegion": "None",
+  "gifters": [],
+  "log": [
+    "RoomID: 7608708502617377556",
+    "Owner Region: null",
+    "Trying Rank Type 30...",
+    "Rank 30 Error: TypeError: Cannot read properties of undefined (reading 'ok')",
+    "Trying Rank Type 20...",
+    "Rank 20 Error: TypeError: Cannot read properties of undefined (reading 'ok')",
+    "Trying Rank Type 11...",
+    "Rank 11 Error: TypeError: Cannot read properties of undefined (reading 'ok')",
+    "Trying Rank Type 4...",
+    "Rank 4 Error: TypeError: Cannot read properties of undefined (reading 'ok')"
+  ]
+}

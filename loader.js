@@ -9,6 +9,12 @@ const CURRENT_VERSION = '1.0.0';
 const CONFIG_PATH = path.join(process.cwd(), 'config.json');
 const HEARTBEAT_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
+// ─── Utility: Pause console before exit ───────────────────────────────────────
+function pauseAndExit(code = 1) {
+    try { execSync('pause', { stdio: 'inherit' }); } catch (e) { }
+    process.exit(code);
+}
+
 // ─── 1. Get HWID (Windows UUID) ───────────────────────────────────────────────
 function getHWID() {
     try {
@@ -41,7 +47,7 @@ async function heartbeat(licenseKey, hwid) {
             console.error('\n🔴 KILL-SWITCH ACTIVADO:', reason);
             console.error('   El administrador ha terminado tu sesión.');
             cleanup();
-            process.exit(1);
+            pauseAndExit(1);
         }
         // Heartbeat OK
         process.stdout.write('.');
@@ -106,7 +112,7 @@ async function start() {
 
         if (!licenseKey) {
             console.error('❌ No ingresaste ninguna licencia. Cerrando...');
-            process.exit(1);
+            pauseAndExit(1);
         }
 
         // Save it for next time
@@ -129,7 +135,7 @@ async function start() {
 
         if (!syncRes.data.success) {
             console.error('❌ Sincronización fallida:', syncRes.data.error);
-            process.exit(1);
+            pauseAndExit(1);
         }
 
         if (syncRes.data.latestVersion && syncRes.data.latestVersion !== CURRENT_VERSION) {
@@ -139,7 +145,7 @@ async function start() {
             console.log(`Tu versión: ${CURRENT_VERSION} | Versión exigida: ${syncRes.data.latestVersion}`);
             console.log('Por favor, contacta con nosotros para recibir la actualización obligatoria.');
             console.log('==================================================\n');
-            process.exit(1);
+            pauseAndExit(1);
         }
 
         if (syncRes.data.announcement && syncRes.data.announcement.message) {
@@ -163,16 +169,28 @@ async function start() {
         console.log(`\n✅ Sincronización OK | SCRIPT V.${new Date(syncRes.data.version).toLocaleString()}`);
         console.log('🚀 Iniciando motor de búsqueda...\n');
 
-        // Write temp script
-        const tempFile = path.join(process.cwd(), '.engine.tmp.js');
-        fs.writeFileSync(tempFile, scriptContent);
-
         // ── Start Heartbeat ──────────────────────────────────────────────────
         console.log('💓 Heartbeat activo (cada 2 min). Ctrl+C para salir.\n');
         heartbeatTimer = setInterval(() => heartbeat(licenseKey, hwid), HEARTBEAT_INTERVAL_MS);
 
         // ── Launch Script ────────────────────────────────────────────────────
         const creators = process.argv[2] || '';
+
+        if (!creators) {
+            console.log('\n✅ LICENCIA VERIFICADA Y REGISTRADA CON ÉXITO.');
+            console.log('================================================================');
+            console.log('⚠ Has abierto el panel de configuración (doble clic).');
+            console.log('Las novedades y tu licencia han sido validadas correctamente.');
+            console.log('A partir de ahora, ya no necesitas abrir este cuadro manualmente.');
+            console.log('Puedes lanzar tus búsquedas directamente desde tu herramienta o Excel.');
+            console.log('================================================================');
+            pauseAndExit(0);
+        }
+
+        // Write temp script
+        const tempFile = path.join(process.cwd(), '.engine.tmp.js');
+        fs.writeFileSync(tempFile, scriptContent);
+
         childProcess = spawn('node', [tempFile, creators, 'none'], {
             stdio: 'inherit'
         });
@@ -198,7 +216,7 @@ async function start() {
         } else {
             console.error('\n❌ Error:', error.message);
         }
-        process.exit(1);
+        pauseAndExit(1);
     }
 }
 

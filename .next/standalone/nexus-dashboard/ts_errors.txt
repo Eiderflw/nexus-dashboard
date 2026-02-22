@@ -1,0 +1,6 @@
+﻿components/CreatorChart.tsx(54,25): error TS2322: Type '(value: number) => [string, "Diamonds" | "Hours"]' is not assignable to type 'Formatter<number, "Diamonds" | "Hours"> & ((value: number, name: "Diamonds" | "Hours", item: Payload<number, "Diamonds" | "Hours">, index: number, payload: Payload<...>[]) => ReactNode | [...])'.
+  Type '(value: number) => [string, "Diamonds" | "Hours"]' is not assignable to type 'Formatter<number, "Diamonds" | "Hours">'.
+    Types of parameters 'value' and 'value' are incompatible.
+      Type 'number | undefined' is not assignable to type 'number'.
+        Type 'undefined' is not assignable to type 'number'.
+components/FileUpload.tsx(4,29): error TS2307: Cannot find module 'react-dropzone' or its corresponding type declarations.

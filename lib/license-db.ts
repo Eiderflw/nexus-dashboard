@@ -15,6 +15,7 @@ export interface License {
     last_seen?: string;
     hwid?: string;
     killed?: boolean;
+    bypass_hwid?: boolean;
 }
 
 export interface Script {
@@ -50,7 +51,8 @@ export const getLicenses = async (): Promise<License[]> => {
                 note: r.note || '',
                 last_seen: r.last_seen || '',
                 hwid: r.hwid || '',
-                killed: r.killed || false
+                killed: r.killed || false,
+                bypass_hwid: r.bypass_hwid || false
             }));
         } catch (e) {
             console.error('Error fetching from PG:', e);
@@ -87,8 +89,8 @@ export const saveLicenses = async (licenses: License[]) => {
             for (const lic of licenses) {
                 if (!lic.key) continue;
                 await pool.query(
-                    `INSERT INTO licenses (key, expires_at, active, reason, note, last_seen, hwid, killed) 
-                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                    `INSERT INTO licenses (key, expires_at, active, reason, note, last_seen, hwid, killed, bypass_hwid) 
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                      ON CONFLICT (key) DO UPDATE SET 
                         expires_at = EXCLUDED.expires_at,
                         active = EXCLUDED.active,
@@ -96,8 +98,9 @@ export const saveLicenses = async (licenses: License[]) => {
                         note = EXCLUDED.note,
                         last_seen = EXCLUDED.last_seen,
                         hwid = EXCLUDED.hwid,
-                        killed = EXCLUDED.killed`,
-                    [lic.key, lic.expires_at || '', lic.active !== false, lic.reason || '', lic.note || '', lic.last_seen || '', lic.hwid || '', lic.killed || false]
+                        killed = EXCLUDED.killed,
+                        bypass_hwid = EXCLUDED.bypass_hwid`,
+                    [lic.key, lic.expires_at || '', lic.active !== false, lic.reason || '', lic.note || '', lic.last_seen || '', lic.hwid || '', lic.killed || false, lic.bypass_hwid || false]
                 );
             }
             await pool.query('COMMIT');
@@ -132,7 +135,8 @@ export const initDb = async () => {
                 note TEXT,
                 last_seen TEXT,
                 hwid TEXT,
-                killed BOOLEAN DEFAULT false
+                killed BOOLEAN DEFAULT false,
+                bypass_hwid BOOLEAN DEFAULT false
             )
         `);
         await pool.query(`
@@ -152,7 +156,10 @@ export const initDb = async () => {
         // Add killed column if it doesn't exist (for existing DBs)
         try {
             await pool.query(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS killed BOOLEAN DEFAULT false`);
-        } catch (_) { /* column already exists */ }
+        } catch (_) { }
+        try {
+            await pool.query(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS bypass_hwid BOOLEAN DEFAULT false`);
+        } catch (_) { }
     }
 };
 
