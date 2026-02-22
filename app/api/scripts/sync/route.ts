@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLicenses, initDb } from '@/lib/license-db';
-import fs from 'fs';
-import path from 'path';
-
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'nexus-master-key';
+import { getLicenses, initDb, saveLicenses, getScript } from '@/lib/license-db';
 
 export async function POST(req: NextRequest) {
     try {
@@ -14,52 +10,55 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Faltan parámetros' }, { status: 400 });
         }
 
-        // Diagnostic logging
-        console.log('CWD:', process.cwd());
-        try {
-            console.log('Root Files:', fs.readdirSync(process.cwd()));
-            if (fs.existsSync(path.join(process.cwd(), 'scripts'))) {
-                console.log('Scripts Folder Content:', fs.readdirSync(path.join(process.cwd(), 'scripts')));
-            }
-        } catch (e) {
-            console.error('Debug logs failed', e);
-        }
-
         // 1. Validate License & HWID
         const licenses = await getLicenses();
-        const license = licenses.find(l => l.key.trim().toUpperCase() === key.trim().toUpperCase());
+        const licIndex = licenses.findIndex(l => l.key.trim().toUpperCase() === key.trim().toUpperCase());
 
-        if (!license || !license.active || license.hwid !== hwid) {
-            return NextResponse.json({ error: 'Acceso denegado (Licencia/HWID inválido)' }, { status: 403 });
+        if (licIndex === -1) {
+            return NextResponse.json({ error: 'Licencia no encontrada' }, { status: 403 });
         }
 
-        // 2. Locate the obfuscated script
-        // We look in dist-scripts first (the protected version)
-        const possiblePaths = [
-            path.join(process.cwd(), 'dist-scripts', scriptName),
-            path.join(process.cwd(), 'scripts', scriptName)
-        ];
+        const license = licenses[licIndex];
 
-        let scriptContent = null;
-        for (const p of possiblePaths) {
-            if (fs.existsSync(p)) {
-                scriptContent = fs.readFileSync(p, 'utf-8');
-                break;
-            }
+        if (!license.active) {
+            return NextResponse.json({ error: `Licencia suspendida. Razón: ${license.reason || 'Sin razón'}` }, { status: 403 });
         }
 
-        if (!scriptContent) {
-            return NextResponse.json({ error: 'Script no encontrado' }, { status: 404 });
+        // 2. HWID Binding: Bind on first use, reject if mismatch
+        if (!license.hwid || license.hwid === '') {
+            // First time: bind this HWID to the license
+            licenses[licIndex].hwid = hwid;
+            licenses[licIndex].last_seen = new Date().toISOString();
+            await saveLicenses(licenses);
+        } else if (license.hwid !== hwid) {
+            return NextResponse.json({ error: 'HWID incorrecto. Esta licencia está bloqueada a otro PC.' }, { status: 403 });
+        } else {
+            // HWID matches: update last_seen
+            licenses[licIndex].last_seen = new Date().toISOString();
+            await saveLicenses(licenses);
         }
 
-        // 3. Return the content (In a real app, we'd encrypt this)
+        // 3. Check expiry
+        if (license.expires_at && new Date(license.expires_at) < new Date()) {
+            return NextResponse.json({ error: 'Licencia vencida.' }, { status: 403 });
+        }
+
+        // 4. Fetch script from DB (not filesystem!)
+        const script = await getScript(scriptName);
+
+        if (!script) {
+            return NextResponse.json({ error: `Script '${scriptName}' no encontrado. Súbelo desde el Panel Admin.` }, { status: 404 });
+        }
+
+        // 5. Return the script content
         return NextResponse.json({
             success: true,
-            content: scriptContent,
-            version: Date.now()
+            content: script.content,
+            version: script.updated_at
         });
 
-    } catch (error) {
+    } catch (error: any) {
+        console.error('Sync error:', error);
         return NextResponse.json({ error: 'Error en la sincronización' }, { status: 500 });
     }
 }

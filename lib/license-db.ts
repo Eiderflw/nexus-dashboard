@@ -14,6 +14,13 @@ export interface License {
     note?: string;
     last_seen?: string;
     hwid?: string;
+    killed?: boolean;
+}
+
+export interface Script {
+    name: string;
+    content: string;
+    updated_at: string;
 }
 
 // PostgreSQL Pool (only initialized if DATABASE_URL is present)
@@ -94,8 +101,63 @@ export const initDb = async () => {
                 reason TEXT,
                 note TEXT,
                 last_seen TEXT,
-                hwid TEXT
+                hwid TEXT,
+                killed BOOLEAN DEFAULT false
             )
         `);
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS scripts (
+                name TEXT PRIMARY KEY,
+                content TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        `);
+        // Add killed column if it doesn't exist (for existing DBs)
+        try {
+            await pool.query(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS killed BOOLEAN DEFAULT false`);
+        } catch (_) { /* column already exists */ }
     }
+};
+
+export const getScript = async (name: string): Promise<Script | null> => {
+    if (pool) {
+        try {
+            const res = await pool.query('SELECT * FROM scripts WHERE name = $1', [name]);
+            return res.rows[0] || null;
+        } catch (e) {
+            console.error('Error fetching script from PG:', e);
+            return null;
+        }
+    }
+    // Local JSON Fallback: read from scripts/ directory
+    const scriptPath = path.join(process.cwd(), 'dist-scripts', name) || path.join(process.cwd(), 'scripts', name);
+    const paths = [
+        path.join(process.cwd(), 'dist-scripts', name),
+        path.join(process.cwd(), 'scripts', name)
+    ];
+    for (const p of paths) {
+        if (fs.existsSync(p)) {
+            return { name, content: fs.readFileSync(p, 'utf-8'), updated_at: new Date().toISOString() };
+        }
+    }
+    return null;
+};
+
+export const saveScript = async (name: string, content: string): Promise<void> => {
+    const updated_at = new Date().toISOString();
+    if (pool) {
+        try {
+            await pool.query(
+                'INSERT INTO scripts (name, content, updated_at) VALUES ($1, $2, $3) ON CONFLICT (name) DO UPDATE SET content = $2, updated_at = $3',
+                [name, content, updated_at]
+            );
+        } catch (e) {
+            console.error('Error saving script to PG:', e);
+        }
+        return;
+    }
+    // Local fallback: save to dist-scripts/
+    const dir = path.join(process.cwd(), 'dist-scripts');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, name), content);
 };
