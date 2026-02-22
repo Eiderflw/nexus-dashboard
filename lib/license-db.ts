@@ -23,6 +23,12 @@ export interface Script {
     updated_at: string;
 }
 
+export interface Setting {
+    key: string;
+    value: string;
+    expires_at?: string;
+}
+
 // PostgreSQL Pool (only initialized if DATABASE_URL is present)
 let pool: Pool | null = null;
 if (DATABASE_URL) {
@@ -136,10 +142,48 @@ export const initDb = async () => {
                 updated_at TEXT NOT NULL
             )
         `);
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL,
+                expires_at TEXT
+            )
+        `);
         // Add killed column if it doesn't exist (for existing DBs)
         try {
             await pool.query(`ALTER TABLE licenses ADD COLUMN IF NOT EXISTS killed BOOLEAN DEFAULT false`);
         } catch (_) { /* column already exists */ }
+    }
+};
+
+// ── Settings ──
+export const getSettings = async (): Promise<Setting[]> => {
+    if (pool) {
+        try {
+            const res = await pool.query('SELECT * FROM settings');
+            return res.rows;
+        } catch (e) {
+            console.error('Error fetching settings from PG:', e);
+            return [];
+        }
+    }
+    return [];
+};
+
+export const saveSetting = async (key: string, value: string, expires_at: string | null = null): Promise<void> => {
+    if (pool) {
+        try {
+            await pool.query(
+                `INSERT INTO settings (key, value, expires_at) 
+                 VALUES ($1, $2, $3) 
+                 ON CONFLICT (key) DO UPDATE SET 
+                 value = EXCLUDED.value, 
+                 expires_at = EXCLUDED.expires_at`,
+                [key, value, expires_at || '']
+            );
+        } catch (e) {
+            console.error('Error saving setting to PG:', e);
+        }
     }
 };
 

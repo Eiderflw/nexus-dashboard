@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Shield, Key, Plus, Trash2, Power, Clock, User, AlertCircle, Pencil, X, Code2, Upload, CheckCircle } from 'lucide-react';
+import { Shield, Key, Plus, Trash2, Power, Clock, User, AlertCircle, Pencil, X, Code2, Upload, CheckCircle, Settings } from 'lucide-react';
 
 interface License {
     key: string;
@@ -13,7 +13,7 @@ interface License {
     hwid?: string;
 }
 
-type Tab = 'licenses' | 'scripts';
+type Tab = 'licenses' | 'scripts' | 'settings';
 
 export default function AdminLicensesPage() {
     const [mounted, setMounted] = useState(false);
@@ -35,6 +35,10 @@ export default function AdminLicensesPage() {
     const [scriptStatus, setScriptStatus] = useState<{ msg: string; ok: boolean } | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // Settings
+    const [settings, setSettings] = useState({ announcement: '', expires_at: '', exe_version: '1.0.0' });
+    const [settingsStatus, setSettingsStatus] = useState<{ msg: string; ok: boolean } | null>(null);
+
     useEffect(() => { setMounted(true); }, []);
 
     const formatForInput = (dateStr: string) => {
@@ -52,6 +56,20 @@ export default function AdminLicensesPage() {
                 setIsAuthorized(true);
             } else {
                 alert("Token de administrador inválido");
+            }
+        } catch (e) { console.error(e); }
+    };
+
+    const fetchSettings = async (currentAdminToken: string) => {
+        try {
+            const res = await fetch(`/api/admin/settings?token=${currentAdminToken}`);
+            if (res.ok) {
+                const data = await res.json();
+                setSettings({
+                    announcement: data.announcement?.value || '',
+                    expires_at: formatForInput(data.announcement?.expires_at || ''),
+                    exe_version: data.exe_version?.value || '1.0.0'
+                });
             }
         } catch (e) { console.error(e); }
     };
@@ -105,6 +123,24 @@ export default function AdminLicensesPage() {
         reader.readAsText(file);
     };
 
+    const handleSettingsSave = async () => {
+        try {
+            const res = await fetch(`/api/admin/settings?token=${token}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    announcement: { value: settings.announcement, expires_at: settings.expires_at ? new Date(settings.expires_at).toISOString() : null },
+                    exe_version: { value: settings.exe_version }
+                })
+            });
+            const data = await res.json();
+            if (res.ok) setSettingsStatus({ msg: data.message, ok: true });
+            else setSettingsStatus({ msg: data.error, ok: false });
+        } catch (e: any) {
+            setSettingsStatus({ msg: e.message, ok: false });
+        }
+    };
+
     // ── Login ──────────────────────────────────────────────────────────────────
     if (!isAuthorized) {
         return (
@@ -141,6 +177,7 @@ export default function AdminLicensesPage() {
                                         const [u, p] = token.split(':');
                                         if (u === 'nenegro' && p === 'Eider1993.1') {
                                             fetchLicenses('nexus-master-key');
+                                            fetchSettings('nexus-master-key');
                                             setToken('nexus-master-key');
                                         } else alert("Credenciales incorrectas");
                                     }
@@ -152,6 +189,7 @@ export default function AdminLicensesPage() {
                                 const [u, p] = token.split(':');
                                 if (u === 'nenegro' && p === 'Eider1993.1') {
                                     fetchLicenses('nexus-master-key');
+                                    fetchSettings('nexus-master-key');
                                     setToken('nexus-master-key');
                                 } else alert("Credenciales incorrectas");
                             }}
@@ -199,6 +237,12 @@ export default function AdminLicensesPage() {
                         className={`px-5 py-3 text-sm font-bold transition-colors flex items-center gap-2 border-b-2 -mb-px ${activeTab === 'scripts' ? 'border-purple-500 text-purple-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
                     >
                         <Code2 className="w-4 h-4" /> Scripts
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('settings')}
+                        className={`px-5 py-3 text-sm font-bold transition-colors flex items-center gap-2 border-b-2 -mb-px ${activeTab === 'settings' ? 'border-orange-500 text-orange-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                    >
+                        <Settings className="w-4 h-4" /> Configuración Global
                     </button>
                 </div>
 
@@ -386,6 +430,84 @@ export default function AdminLicensesPage() {
                                     <p>3. Hub descarga el script de DB y lo envía en RAM</p>
                                     <p>4. Si suspendes una licencia → el <strong className="text-slate-300">Kill-switch</strong> cierra el loader en ≤2 min</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ── SETTINGS TAB ─────────────────────────────────────────────────── */}
+                {activeTab === 'settings' && (
+                    <div className="max-w-3xl mx-auto">
+                        <div className="bg-slate-900 border border-slate-800 rounded-xl p-8">
+                            <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-3">
+                                <Settings className="text-orange-500" /> Transmisión Global de Novedades
+                            </h2>
+                            <p className="text-slate-500 text-sm mb-6">
+                                Este panel permite enviar un mensaje que se imprimirá en las consolas de todos los clientes antes de que arranque el script. También puedes forzarles a usar un ejecutable `NexusHunter.exe` más nuevo obligándolos a actualizar si subes la versión.
+                            </p>
+
+                            <div className="space-y-6">
+                                <div className="p-5 border border-slate-700 bg-slate-800/50 rounded-lg">
+                                    <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+                                        📰 Anuncio / Noticia en Consola
+                                    </h3>
+
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-semibold text-slate-400 mb-1">MENSAJE DEL ANUNCIO (Dejar vacío para desactivar)</label>
+                                            <textarea
+                                                className="w-full bg-slate-950 border border-slate-700 text-white rounded-lg px-4 py-3 text-sm focus:border-orange-500 outline-none resize-y"
+                                                rows={4}
+                                                placeholder="Por ejemplo: 'Mantenimiento hoy a las 5PM' o 'Hemos actualizado la eficiencia de scraping'"
+                                                value={settings.announcement}
+                                                onChange={(e) => setSettings({ ...settings, announcement: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-slate-400 mb-1">VENCE EL (FECHA Y HORA)</label>
+                                            <input
+                                                type="datetime-local"
+                                                className="w-full bg-slate-950 border border-slate-700 text-white rounded-lg px-4 py-3 text-sm focus:border-orange-500 outline-none"
+                                                value={settings.expires_at}
+                                                onChange={(e) => setSettings({ ...settings, expires_at: e.target.value })}
+                                            />
+                                            <p className="text-[10px] text-slate-500 mt-1">Después de esta fecha, el anuncio desaparecerá de las pantallas automáticamente.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-5 border border-slate-700 bg-slate-800/50 rounded-lg">
+                                    <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+                                        📦 Requisito de Versión de EXE
+                                    </h3>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-400 mb-1">ÚLTIMA VERSIÓN EXIGIDA</label>
+                                        <input
+                                            type="text"
+                                            className="w-full bg-slate-950 border border-slate-700 text-white font-mono rounded-lg px-4 py-3 text-sm focus:border-orange-500 outline-none"
+                                            value={settings.exe_version}
+                                            onChange={(e) => setSettings({ ...settings, exe_version: e.target.value })}
+                                        />
+                                        <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
+                                            <AlertCircle className="w-3 h-3 text-yellow-500" />
+                                            Cualquier cliente con una versión más baja quedará <strong>bloqueado</strong> indicándole que debe contactarte para recibir el programa nuevo.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={handleSettingsSave}
+                                    className="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                                >
+                                    Guardar Configuración Global
+                                </button>
+
+                                {settingsStatus && (
+                                    <div className={`flex items-start gap-3 p-4 rounded-lg border ${settingsStatus.ok ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-red-500/10 border-red-500/30 text-red-400'}`}>
+                                        {settingsStatus.ok ? <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> : <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />}
+                                        <p className="text-sm">{settingsStatus.msg}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

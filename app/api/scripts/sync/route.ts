@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLicenses, initDb, saveLicenses, getScript } from '@/lib/license-db';
+import { getLicenses, initDb, saveLicenses, getScript, getSettings } from '@/lib/license-db';
 
 export async function POST(req: NextRequest) {
     try {
@@ -53,11 +53,28 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: `Script '${scriptName}' no encontrado. Súbelo desde el Panel Admin.` }, { status: 404 });
         }
 
-        // 5. Return the script content
+        // 5. Fetch Global Settings
+        const settings = await getSettings();
+        const verSetting = settings.find(s => s.key === 'exe_version');
+        const annSetting = settings.find(s => s.key === 'announcement');
+
+        const latestVersion = verSetting ? verSetting.value : '1.0.0';
+        let announcement = null;
+
+        if (annSetting && annSetting.value) {
+            // Check expiry
+            if (!annSetting.expires_at || new Date(annSetting.expires_at) >= new Date()) {
+                announcement = { message: annSetting.value };
+            }
+        }
+
+        // 6. Return the script content and global settings
         return NextResponse.json({
             success: true,
             content: script.content,
-            version: script.updated_at
+            version: script.updated_at,
+            latestVersion: latestVersion,
+            announcement: announcement
         });
 
     } catch (error: any) {

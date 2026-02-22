@@ -2,8 +2,10 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawn } = require('child_process');
+const readline = require('readline');
 
 const HUB_URL = 'https://nexus-hub-3c3v.onrender.com';
+const CURRENT_VERSION = '1.0.0';
 const CONFIG_PATH = path.join(process.cwd(), 'config.json');
 const HEARTBEAT_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
@@ -60,6 +62,18 @@ function cleanup() {
     }
 }
 
+process.on('uncaughtException', (err) => {
+    console.error('\n❌ Error interno inesperado:', err.message);
+    cleanup();
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+    console.error('\n❌ Falla inesperada (Promesa):', reason);
+    cleanup();
+    process.exit(1);
+});
+
 // ─── 3. Main ──────────────────────────────────────────────────────────────────
 async function start() {
     console.log('╔══════════════════════════════════════╗');
@@ -67,17 +81,37 @@ async function start() {
     console.log('╚══════════════════════════════════════╝\n');
 
     // Load Config
-    if (!fs.existsSync(CONFIG_PATH)) {
-        fs.writeFileSync(CONFIG_PATH, JSON.stringify({ licenseKey: 'PONER_TU_LLAVE_AQUI' }, null, 4));
-        console.error('⚠ Archivo config.json no encontrado. Se ha creado uno.');
-        console.error('  → Pon tu clave de licencia en config.json y vuelve a ejecutar.\n');
-        process.exit(1);
+    let licenseKey = '';
+
+    if (fs.existsSync(CONFIG_PATH)) {
+        try {
+            const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
+            licenseKey = config.licenseKey || '';
+        } catch (e) { }
     }
 
-    const { licenseKey } = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
     if (!licenseKey || licenseKey === 'PONER_TU_LLAVE_AQUI') {
-        console.error('⚠ Por favor, edita config.json y coloca tu clave de licencia real.\n');
-        process.exit(1);
+        console.log('⚠ No se detectó una licencia guardada.');
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+
+        licenseKey = await new Promise(resolve => {
+            rl.question('👉 Por favor, ingresa tu clave de licencia: ', ans => {
+                rl.close();
+                resolve(ans.trim());
+            });
+        });
+
+        if (!licenseKey) {
+            console.error('❌ No ingresaste ninguna licencia. Cerrando...');
+            process.exit(1);
+        }
+
+        // Save it for next time
+        fs.writeFileSync(CONFIG_PATH, JSON.stringify({ licenseKey }, null, 4));
+        console.log('✅ Licencia guardada para futuras ejecuciones.\n');
     }
 
     const hwid = getHWID();
@@ -98,8 +132,35 @@ async function start() {
             process.exit(1);
         }
 
+        if (syncRes.data.latestVersion && syncRes.data.latestVersion !== CURRENT_VERSION) {
+            console.log('\n==================================================');
+            console.log('❌ VERSIÓN OBSOLETA ❌');
+            console.log('Tu versión de Nexus Hunter es demasiado antigua.');
+            console.log(`Tu versión: ${CURRENT_VERSION} | Versión exigida: ${syncRes.data.latestVersion}`);
+            console.log('Por favor, contacta con nosotros para recibir la actualización obligatoria.');
+            console.log('==================================================\n');
+            process.exit(1);
+        }
+
+        if (syncRes.data.announcement && syncRes.data.announcement.message) {
+            console.log('');
+            console.log('╔═════════════════════════════════════════════════╗');
+            console.log('║               📰 NOVEDADES DEL HUB              ║');
+            console.log('╠═════════════════════════════════════════════════╣');
+            const lines = syncRes.data.announcement.message.split('\n');
+            lines.forEach(line => {
+                const sublines = line.match(/.{1,45}/g) || [''];
+                sublines.forEach(subline => {
+                    console.log(`║ ${subline.padEnd(47)} ║`);
+                });
+            });
+            console.log('╚═════════════════════════════════════════════════╝\n');
+            console.log('Iniciando sistema en 5 segundos...');
+            await new Promise(r => setTimeout(r, 5000));
+        }
+
         const scriptContent = syncRes.data.content;
-        console.log(`✅ Sincronización OK | Versión: ${new Date(syncRes.data.version).toLocaleString()}`);
+        console.log(`\n✅ Sincronización OK | SCRIPT V.${new Date(syncRes.data.version).toLocaleString()}`);
         console.log('🚀 Iniciando motor de búsqueda...\n');
 
         // Write temp script
