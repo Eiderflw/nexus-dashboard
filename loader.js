@@ -68,7 +68,11 @@ async function start() {
         }
 
     } catch (error) {
-        console.error('❌ Error de conexión:', error.response?.data?.error || error.message);
+        if (error.response) {
+            console.error(`❌ Error de sincronización (Status ${error.response.status}):`, error.response.data.error || error.response.data);
+        } else {
+            console.error('❌ Error de conexión:', error.message);
+        }
     }
 }
 

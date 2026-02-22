@@ -3,30 +3,22 @@ const path = require('path');
 const fs = require('fs');
 
 async function build() {
-    console.log('--- Starting Executable Build ---');
+    console.log('--- Construyendo Nexus Hunter EXE ---');
 
-    // 1. Obfuscate first
-    console.log('Step 1: Obfuscating scripts...');
-    execSync('npm run obfuscate', { stdio: 'inherit' });
-
-    // 2. Build with PKG
-    // We package the dist-scripts/check-agency.js as a starting point
-    console.log('Step 2: Packaging with pkg...');
-
-    const targets = 'node18-win-x64'; // Build for Windows
-    const outputPath = 'build/NexusHunter.exe';
-
-    if (!fs.existsSync('build')) fs.mkdirSync('build');
+    const buildDir = path.join(process.cwd(), 'build');
+    if (!fs.existsSync(buildDir)) fs.mkdirSync(buildDir);
 
     try {
-        // We use the obfuscated version from dist-scripts
-        execSync(`npx pkg dist-scripts/check-agency.js --targets ${targets} --output ${outputPath}`, { stdio: 'inherit' });
-        console.log(`Success! Executable created at: ${outputPath}`);
-    } catch (e) {
-        console.error('Build failed:', e);
-    }
+        console.log('1. Empaquetando Secure Loader (NexusHunter.exe)...');
+        // Usamos pkg para convertir el loader en un binario de Windows
+        execSync('npx pkg loader.js --targets node18-win-x64 --output build/NexusHunter.exe', { stdio: 'inherit' });
 
-    console.log('--- Build Process Complete ---');
+        console.log('\n✅ ÉXITO: build/NexusHunter.exe generado.');
+        console.log('Instrucciones: Entrega este archivo junto con un config.json a la agencia.');
+
+    } catch (e) {
+        console.error('❌ Error en la construcción:', e);
+    }
 }
 
 build();

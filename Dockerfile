@@ -11,6 +11,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
+RUN cp -r scripts .next/standalone/scripts
+RUN cp -r dist-scripts .next/standalone/dist-scripts || true
 
 # Production image, copy all the files and run next
 FROM node:20-slim AS runner
