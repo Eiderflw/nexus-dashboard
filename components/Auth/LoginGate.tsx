@@ -12,22 +12,33 @@ export default function LoginGate({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        // Detect Electron
-        const electronEnabled = typeof window !== 'undefined' && (window as any).nexusHunter?.isElectron;
-        setIsElectron(!!electronEnabled);
+        // More robust Electron detection
+        const checkElectron = () => {
+            const electronEnabled = typeof window !== 'undefined' &&
+                ((window as any).nexusHunter?.isElectron ||
+                    navigator.userAgent.toLowerCase().includes('electron'));
 
-        if (electronEnabled) {
-            const savedKey = localStorage.getItem('nexus_license_key');
-            if (savedKey) {
-                setLicenseKey(savedKey);
-                validateLicense(savedKey);
+            console.log('[Nexus-Auth] Entorno detectado:', electronEnabled ? 'Electron' : 'Browser');
+            setIsElectron(!!electronEnabled);
+
+            if (electronEnabled) {
+                const savedKey = localStorage.getItem('nexus_license_key');
+                console.log('[Nexus-Auth] Llave guardada:', savedKey ? 'Encontrada' : 'No encontrada');
+                if (savedKey) {
+                    setLicenseKey(savedKey);
+                    validateLicense(savedKey);
+                } else {
+                    setLicenseStatus('invalid');
+                }
             } else {
-                setLicenseStatus('invalid');
+                setLicenseStatus('valid');
             }
-        } else {
-            // Not in electron, allow through (HWID check will happen at component level)
-            setLicenseStatus('valid');
-        }
+        };
+
+        checkElectron();
+        // Fallback in case injections are slow
+        const timer = setTimeout(checkElectron, 500);
+        return () => clearTimeout(timer);
     }, []);
 
     const validateLicense = async (key: string) => {
