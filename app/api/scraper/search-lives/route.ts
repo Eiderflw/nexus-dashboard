@@ -30,43 +30,68 @@ export async function POST(req: NextRequest) {
             });
 
             child.on('close', (code) => {
+                const stdoutTrimmed = stdout.trim();
+                const stderrTrimmed = stderr.trim();
+
                 if (code !== 0) {
-                    console.error('Search Script Error:', stderr);
-                    resolve(NextResponse.json({ error: 'Error ejecutando la búsqueda', details: stderr }, { status: 500 }));
-                } else {
-                    try {
-                        // Robust Parsing: Look for the last valid JSON object in stdout
-                        // This ignores any previous console.log noise
-                        const lines = stdout.trim().split('\n');
-                        let result = null;
+                    console.error('Search Script Error (exit code ' + code + '):', stderrTrimmed);
+                    // Extract last meaningful error line from stderr
+                    const errLines = stderrTrimmed.split('\n').filter(l => l.trim());
+                    const lastErr = errLines[errLines.length - 1] || 'Error desconocido';
+                    resolve(NextResponse.json({
+                        error: 'Error ejecutando el escáner',
+                        details: lastErr
+                    }, { status: 500 }));
+                    return;
+                }
 
-                        // Try parsing from the last line backwards
-                        for (let i = lines.length - 1; i >= 0; i--) {
-                            try {
-                                const potentialJson = JSON.parse(lines[i]);
-                                if (potentialJson && (potentialJson.creators || potentialJson.error)) {
-                                    result = potentialJson;
-                                    break;
-                                }
-                            } catch (e) {
-                                // Not JSON, continue
+                // Script exited 0 but stdout is empty – crash mid-run
+                if (!stdoutTrimmed) {
+                    console.error('Search Script: empty stdout. stderr=', stderrTrimmed.slice(0, 500));
+                    resolve(NextResponse.json({
+                        error: 'El escáner terminó sin resultados. Verifica la cookie de sesión de TikTok e intenta de nuevo.',
+                        details: stderrTrimmed.slice(0, 300)
+                    }, { status: 500 }));
+                    return;
+                }
+
+                try {
+                    // Robust Parsing: Look for the last valid JSON object in stdout
+                    // This ignores any previous console.log noise
+                    const lines = stdoutTrimmed.split('\n');
+                    let result = null;
+
+                    // Try parsing from the last line backwards
+                    for (let i = lines.length - 1; i >= 0; i--) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        try {
+                            const potentialJson = JSON.parse(line);
+                            if (potentialJson && (potentialJson.creators !== undefined || potentialJson.error)) {
+                                result = potentialJson;
+                                break;
                             }
+                        } catch (e) {
+                            // Not JSON, continue
                         }
-
-                        if (!result) {
-                            // Fallback: try parsing the whole thing if it's a single blob
-                            result = JSON.parse(stdout);
-                        }
-
-                        if (result.error) {
-                            resolve(NextResponse.json({ error: result.error }, { status: 500 }));
-                        } else {
-                            resolve(NextResponse.json(result));
-                        }
-                    } catch (e) {
-                        console.error('Parse Error:', e, stdout);
-                        resolve(NextResponse.json({ error: 'Error analizando respuesta de búsqueda', details: stdout }, { status: 500 }));
                     }
+
+                    if (!result) {
+                        // Last resort: try parsing the whole stdout blob
+                        result = JSON.parse(stdoutTrimmed);
+                    }
+
+                    if (result.error) {
+                        resolve(NextResponse.json({ error: result.error }, { status: 500 }));
+                    } else {
+                        resolve(NextResponse.json(result));
+                    }
+                } catch (e) {
+                    console.error('Parse Error:', e, stdoutTrimmed.slice(0, 200));
+                    resolve(NextResponse.json({
+                        error: 'Error analizando respuesta de búsqueda',
+                        details: stdoutTrimmed.slice(0, 500)
+                    }, { status: 500 }));
                 }
             });
         });
