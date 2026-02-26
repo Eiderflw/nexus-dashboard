@@ -189,7 +189,7 @@ export default function AdminLicensesPage() {
                         <button
                             onClick={() => {
                                 const [u, p] = token.split(':');
-                                if (u === 'nenegro' && p === 'Eider166') {
+                                if (u === 'nenegro' && p === 'Eider1993.1') {
                                     fetchLicenses('nexus-master-key');
                                     fetchSettings('nexus-master-key');
                                     setToken('nexus-master-key');

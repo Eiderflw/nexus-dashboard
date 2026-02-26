@@ -7,7 +7,7 @@ import { Lock, ShieldCheck } from 'lucide-react';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('nenegro');
-    const [password, setPassword] = useState('Eider166');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const router = useRouter();
     const { login } = useAuthStore();
@@ -15,7 +15,7 @@ export default function LoginPage() {
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         // Hardcoded credentials as requested
-        if (username === 'nenegro' && password === 'Eider166') {
+        if (username === 'nenegro' && password === 'Eider1993.1') {
             login();
             router.push('/');
         } else {
