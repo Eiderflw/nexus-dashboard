@@ -236,19 +236,25 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
                 break;
             }
 
+            if (!isElectron) {
+                alert('⚠️ ESCÁNER RESTRINGIDO: Por medidas de seguridad contra baneos, el escáner solo funciona dentro de la Aplicación de Escritorio.');
+                setIsValidating(false);
+                return;
+            }
+
             let newResults = [];
-            if (isElectron) {
-                try {
-                    const res = await (window as any).nexusHunter.execute({
-                        action: 'check-agency',
-                        params: { creators: batchConfig, cookie, licenseKey }
-                    });
+            try {
+                const res = await (window as any).nexusHunter.execute({
+                    action: 'check-agency',
+                    params: { creators: batchConfig, cookie, licenseKey }
+                });
+                if (res.success === false) {
+                    alert('Error en Escritorio: ' + res.message);
+                } else {
                     newResults = res.results || [];
-                } catch (e) {
-                    console.error("Local Electron Scraper Failed", e);
                 }
-            } else {
-                newResults = await runBatchOnServer(batchConfig, batchNum);
+            } catch (e) {
+                console.error("Local Electron Scraper Failed", e);
             }
 
             if (newResults.length > 0) {
@@ -284,25 +290,22 @@ export default function CreatorFinderModal({ isOpen, onClose }: CreatorFinderMod
         const isElectron = typeof window !== 'undefined' && (window as any).nexusHunter?.isElectron;
 
         try {
+            if (!isElectron) {
+                alert('⚠️ ESCÁNER RESTRINGIDO: Por medidas de seguridad contra baneos, el escáner solo funciona dentro de la Aplicación de Escritorio (Nexus Hunter).');
+                setIsSearching(false);
+                return;
+            }
+
             let creators = [];
-            if (isElectron) {
-                const res = await (window as any).nexusHunter.execute({
-                    action: 'search-lives',
-                    params: { keyword: searchQuery, cookie, licenseKey }
-                });
-                creators = res.creators || [];
+            const res = await (window as any).nexusHunter.execute({
+                action: 'search-lives',
+                params: { keyword: searchQuery, cookie, licenseKey }
+            });
+
+            if (res.success === false) {
+                alert('Error del Escáner (Escritorio): ' + res.message);
             } else {
-                const response = await fetch('/api/scraper/search-lives', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ keyword: searchQuery, cookie })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    creators = data.creators || [];
-                } else {
-                    alert('Error en la búsqueda: ' + (data.error || 'Desconocido'));
-                }
+                creators = res.creators || [];
             }
 
             if (creators.length > 0) {
